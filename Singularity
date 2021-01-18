@@ -46,7 +46,7 @@ From: ubuntu:rolling
 %labels
     Author jmb@iseclab.org
     MAINTAINER Josh Bundt
-    Version v0.0.2
+    Version v0.0.3
 
 %help
     Ubuntu rolling with build tools.
