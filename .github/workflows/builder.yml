@@ -1,4 +1,4 @@
-name: singularity-deploy
+name: apptainer-deploy
 
 on:
   push:
@@ -36,27 +36,27 @@ jobs:
           release_name: Release ${{ env.release_tag }}
           draft: false
           prerelease: false
-      - uses: eWaterCycle/setup-singularity@v6
+      - uses: eWaterCycle/setup-apptainer@v2
         if: ${{ env.release_tag != env.latest_tag }}
         with:
-          singularity-version: 3.7.1
-      - name: Build the singularity container
+          apptainer-version: 1.1.2
+      - name: Build the apptainer container
         if: ${{ env.release_tag != env.latest_tag }}
         run: |
             repo=$(echo "${GITHUB_REPOSITORY/\//-}")
 
-            # For each Singularity* container, build based on the prefix (tag)
-            for recipe in $(ls Singularity*); do
+            # For each Apptainer* container, build based on the prefix (tag)
+            for recipe in $(ls Apptainer*); do
                 echo "Building $recipe"
-                tag=$(echo "${recipe/Singularity\./}")
+                tag=$(echo "${recipe/Apptainer\./}")
                 # If we find empty, use latest
-                if [ "$tag" == "Singularity" ]; then
+                if [ "$tag" == "Apptainer" ]; then
                     tag=latest
                 fi
                 # Build the container and name by tag
                 echo "Tag is $tag."
                 container="$repo:$tag.sif"
-                singularity build --fakeroot container.sif "$recipe"
+                apptainer build --fakeroot container.sif "$recipe"
                 if [ "$?" == "0" ]; then
                     echo "Successfully built container $container."
                     mv container.sif "$container"
